@@ -1,25 +1,46 @@
-import logo from './logo.svg';
+import React, { useState } from 'react'
 import './App.css';
-
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import FirebaseApp from './Firebase/firebase.config';
+FirebaseApp();
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const  [user, setUser] = useState({
+    isSignIn: false,
+    name: '',
+    email: '',
+    photo: ''
+  });
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+  const handleSignIn = () => {
+    signInWithPopup(auth, provider)
+    .then((result) => {
+      const { displayName, photoURL, email} = result.user;
+      const signInUser = {
+        isSignIn: true,
+        name: displayName,
+        email: email,
+        photo: photoURL
+      }
+      setUser(signInUser);
+    })
+    .catch((error) => {
+      console.log(error);
+      console.log(error.message);
+    });
+
+  }
+
+	return <div className="App">
+    <button onClick={handleSignIn}>Sign In</button>
+    {
+      user.isSignIn && <div>
+        <p>Welcome, {user.name}</p>
+        <p>Your email: {user.email}</p>
+        <img src={user.photo} alt="" />
+      </div>
+    }
+  </div>;
 }
 
 export default App;
