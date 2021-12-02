@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './App.css';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut  } from "firebase/auth";
 import FirebaseApp from './Firebase/firebase.config';
 FirebaseApp();
 function App() {
@@ -30,9 +30,20 @@ function App() {
     });
 
   }
+  const handleSignOut = () => {
+    const auth = getAuth();
+signOut(auth).then(() => {
+  // Sign-out successful.
+}).catch((error) => {
+  // An error happened.
+});
+  }
 
 	return <div className="App">
-    <button onClick={handleSignIn}>Sign In</button>
+    {
+      user.isSignIn? <button onClick={handleSignOut}>Sign Out</button> : 
+      <button onClick={handleSignIn}>Sign In</button>
+    }
     {
       user.isSignIn && <div>
         <p>Welcome, {user.name}</p>
