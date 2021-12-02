@@ -34,8 +34,16 @@ function App() {
     const auth = getAuth();
 signOut(auth).then(() => {
   // Sign-out successful.
+  const signOutUser = {
+    isSignIn: false,
+    name: '',
+    email: '',
+    photo: ''
+  }
+  setUser(signOutUser)
 }).catch((error) => {
   // An error happened.
+  console.log(error);
 });
   }
 
